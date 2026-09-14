@@ -1,0 +1,26 @@
+{
+    "name": "artack/fe-reviewer-twig",
+    "description": "Dev-only Twig-Instrumentierung für fe-reviewer: ordnet gerenderte DOM-Elemente ihrem Quell-Template zu (Herkunfts-Marker um {% include %}/{% embed %}).",
+    "type": "symfony-bundle",
+    "license": "proprietary",
+    "keywords": ["twig", "symfony", "dev", "fe-reviewer", "source-map"],
+    "require": {
+        "php": ">=8.2",
+        "twig/twig": "^3.10",
+        "symfony/config": "^6.4 || ^7.0",
+        "symfony/dependency-injection": "^6.4 || ^7.0",
+        "symfony/http-kernel": "^6.4 || ^7.0",
+        "symfony/twig-bundle": "^6.4 || ^7.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Artack\\FeReviewerTwig\\": "src/"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-main": "0.1-dev"
+        }
+    },
+    "minimum-stability": "stable"
+}
