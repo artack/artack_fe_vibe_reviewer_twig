@@ -55,13 +55,15 @@ abgesichert, falls der Bundle-Eintrag versehentlich für alle Umgebungen gilt.
 
 ## Was instrumentiert wird
 
-Nur `{% include %}` und `{% embed %}` — die sichersten Injektionspunkte (fast immer Flow-Content,
-praktisch nie in `<head>/<title>/<script>` oder Attributen). Ganze Templates (`ModuleNode`) werden
+Beide Einbindungs-Formen — die sichersten Injektionspunkte (fast immer Flow-Content,
+praktisch nie in `<head>/<title>/<script>`). Ganze Templates (`ModuleNode`) werden
 absichtlich nicht umschlossen (kein Kommentar vor `<!doctype>`).
 
-- Literales `{% include '_card.html.twig' %}` → Payload = der Partial-Pfad.
+- Tag-Form `{% include '_card.html.twig' %}` → Payload = der Partial-Pfad.
+- **Funktions-Form `{{ include('_card.html.twig') }}`** → Payload = der Partial-Pfad (seit v0.2.0).
 - Dynamisches Include / `{% embed %}` → Payload = Ort der Anweisung (`template:zeile`).
-- `{{ include('…') }}` (Funktionsform) ist nicht abgedeckt — nutze die Tag-Form.
+- Selten steht `{{ include(...) }}` in einem Attribut/JS statt im Content — dort wäre der
+  Kommentar unpassend. In der Praxis rendert `include()` Content, daher ist das Risiko gering.
 
 Elemente ausserhalb jedes Includes bekommen keinen Marker → die Toolbar fällt dort auf Vorfahrenkette
 + Screenshot zurück. Je mehr Partials/Components, desto höher die Trefferquote.
