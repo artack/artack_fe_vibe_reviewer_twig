@@ -17,11 +17,13 @@ Die Toolbar liest diese Kommentare und schickt dem Reviewer statt „irgendwo" e
 
 ## Installation
 
-Solange nicht auf Packagist: VCS-Repository in der `composer.json` des Zielprojekts eintragen …
+Solange nicht auf Packagist: VCS-Repository in der `composer.json` des Zielprojekts eintragen.
+Das Repo ist **public**, daher genügt die HTTPS-URL — **kein Token, kein SSH** nötig (Composer
+lädt das Dist-Zip über die GitHub-API, funktioniert auch in Containern ohne git):
 
 ```json
 "repositories": [
-    { "type": "vcs", "url": "git@github.com:pgsell/fe-vibe-reviewer_twig.git" }
+    { "type": "vcs", "url": "https://github.com/artack/fe-vibe-reviewer_twig.git" }
 ]
 ```
 
