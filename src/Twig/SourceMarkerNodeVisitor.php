@@ -76,13 +76,13 @@ final class SourceMarkerNodeVisitor implements NodeVisitorInterface
     {
         // Embeds kompilieren zu generierten Namen → kein sinnvoller Pfad; Ort verwenden.
         if (!$node instanceof EmbedNode && $node->hasNode('expr')) {
-            $path = $this->constantPath($node->getNode('expr'));
-            if (null !== $path) {
-                return $path;
+            $expr = $node->getNode('expr');
+            if ($expr instanceof ConstantExpression) {
+                return $this->pathOrSkip($this->literalPath($expr)); // literales Include
             }
         }
 
-        return $this->location($node);
+        return $this->location($node); // dynamisch / embed → Ort
     }
 
     /**
@@ -91,22 +91,35 @@ final class SourceMarkerNodeVisitor implements NodeVisitorInterface
     private function payloadForFunction(FunctionExpression $fn): ?string
     {
         if ($fn->hasNode('arguments')) {
-            foreach ($fn->getNode('arguments') as $arg) {
-                $path = $arg instanceof Node ? $this->constantPath($arg) : null;
+            foreach ($fn->getNode('arguments') as $arg) { // nur das erste Argument zählt
+                if ($arg instanceof ConstantExpression) {
+                    return $this->pathOrSkip($this->literalPath($arg));
+                }
 
-                return $path ?? $this->location($fn); // nur das erste Argument zählt
+                return $this->location($fn); // erstes Argument dynamisch → Ort
             }
         }
 
         return $this->location($fn);
     }
 
-    /** Literalen String (oder ersten Kandidaten einer Array-Angabe) aus einem Konstanten-Ausdruck. */
-    private function constantPath(Node $expr): ?string
+    /**
+     * Entscheidet über einen literalen Zielpfad: HTML-Partial → als Payload verwenden,
+     * Nicht-HTML-Ziel (.css/.js/.svg/.json/.xml/.txt, auch *.twig) → null = NICHT markieren
+     * (ein Kommentar in einem eingebundenen Stylesheet/Skript/SVG wäre unpassend).
+     */
+    private function pathOrSkip(?string $path): ?string
     {
-        if (!$expr instanceof ConstantExpression) {
+        if (null === $path || preg_match('/\.(css|js|svg|json|xml|txt)(\.twig)?$/i', $path)) {
             return null;
         }
+
+        return $path;
+    }
+
+    /** Literalen String (oder ersten Kandidaten einer Array-Angabe) aus einem Konstanten-Ausdruck. */
+    private function literalPath(ConstantExpression $expr): ?string
+    {
         $v = $expr->getAttribute('value');
         if (\is_string($v)) {
             return $v;
