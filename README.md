@@ -21,7 +21,7 @@ Solange nicht auf Packagist: VCS-Repository in der `composer.json` des Zielproje
 
 ```json
 "repositories": [
-    { "type": "vcs", "url": "git@github.com:artack/fe-reviewer-twig.git" }
+    { "type": "vcs", "url": "git@github.com:pgsell/fe-vibe-reviewer_twig.git" }
 ]
 ```
 
