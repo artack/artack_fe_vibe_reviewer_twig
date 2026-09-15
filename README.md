@@ -73,4 +73,4 @@ Vendor-Templates bekommen ebenfalls Marker; die überschreibt man (`templates/bu
 
 ## Kompatibilität
 
-Getestet mit Symfony 6.4/7 und Twig 3.28. Benötigt PHP ≥ 8.2.
+Getestet mit Symfony 8.1 und Twig 3.28 (Constraints: Symfony 6.4/7/8). Benötigt PHP ≥ 8.2.
