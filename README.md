@@ -1,6 +1,6 @@
 # artack/fe-reviewer-twig
 
-Dev-only Twig-Instrumentierung für die [fe-reviewer](https://github.com/pgsell/fe-vibe-reviewer)-Toolbar.
+Dev-only Twig-Instrumentierung für die [fe-reviewer](https://github.com/artack/artack_fe_vibe_reviewer)-Toolbar.
 Ordnet ein im Browser angeklicktes DOM-Element automatisch dem **Twig-Template** zu, das es erzeugt hat —
 **ohne deine Templates zu verändern**.
 
