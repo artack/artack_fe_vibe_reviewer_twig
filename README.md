@@ -23,7 +23,7 @@ lädt das Dist-Zip über die GitHub-API, funktioniert auch in Containern ohne gi
 
 ```json
 "repositories": [
-    { "type": "vcs", "url": "https://github.com/artack/fe-vibe-reviewer_twig.git" }
+    { "type": "vcs", "url": "https://github.com/artack/artack_fe_vibe_reviewer_twig.git" }
 ]
 ```
 
