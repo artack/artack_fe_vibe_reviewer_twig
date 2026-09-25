@@ -16,8 +16,10 @@ use Twig\Node\Node;
  */
 final class MarkerNode extends Node
 {
-    public function __construct(private readonly string $kind, private readonly string $payload = '')
-    {
+    public function __construct(
+        private readonly string $kind,
+        private readonly string $payload = '',
+    ) {
         parent::__construct();
     }
 

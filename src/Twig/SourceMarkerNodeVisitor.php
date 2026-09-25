@@ -13,6 +13,9 @@ use Twig\Node\Node;
 use Twig\Node\PrintNode;
 use Twig\NodeVisitor\NodeVisitorInterface;
 
+use function is_array;
+use function is_string;
+
 /**
  * Umschließt eingebundene Teil-Templates beim Kompilieren mit Herkunfts-Markern
  * (<!--fe:in <partial>--> … <!--fe:out-->). Erfasst beide Formen:
@@ -33,7 +36,7 @@ final class SourceMarkerNodeVisitor implements NodeVisitorInterface
         return $node;
     }
 
-    public function leaveNode(Node $node, Environment $env): ?Node
+    public function leaveNode(Node $node, Environment $env): Node
     {
         // Tag-Form: {% include %} / {% embed %}
         if ($node instanceof IncludeNode) {
@@ -117,14 +120,16 @@ final class SourceMarkerNodeVisitor implements NodeVisitorInterface
         return $path;
     }
 
-    /** Literalen String (oder ersten Kandidaten einer Array-Angabe) aus einem Konstanten-Ausdruck. */
+    /**
+     * Literalen String (oder ersten Kandidaten einer Array-Angabe) aus einem Konstanten-Ausdruck.
+     */
     private function literalPath(ConstantExpression $expr): ?string
     {
         $v = $expr->getAttribute('value');
-        if (\is_string($v)) {
+        if (is_string($v)) {
             return $v;
         }
-        if (\is_array($v) && isset($v[0]) && \is_string($v[0])) {
+        if (is_array($v) && isset($v[0]) && is_string($v[0])) {
             return $v[0];
         }
 

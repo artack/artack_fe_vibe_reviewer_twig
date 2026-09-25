@@ -1,5 +1,7 @@
 /vendor/
-composer.lock
+/tools/*/vendor/
+/composer.lock
 .php-cs-fixer.cache
 .phpunit.result.cache
+.phpunit.cache/
 .DS_Store

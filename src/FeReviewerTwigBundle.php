@@ -19,6 +19,9 @@ use Symfony\Component\HttpKernel\Bundle\AbstractBundle;
  */
 final class FeReviewerTwigBundle extends AbstractBundle
 {
+    /**
+     * @param array<string, mixed> $config
+     */
     public function loadExtension(array $config, ContainerConfigurator $container, ContainerBuilder $builder): void
     {
         if ('dev' !== $builder->getParameter('kernel.environment')) {

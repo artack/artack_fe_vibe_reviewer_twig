@@ -3,7 +3,13 @@
     "description": "Dev-only Twig-Instrumentierung für fe-reviewer: ordnet gerenderte DOM-Elemente ihrem Quell-Template zu (Herkunfts-Marker um {% include %}/{% embed %}).",
     "type": "symfony-bundle",
     "license": "proprietary",
-    "keywords": ["twig", "symfony", "dev", "fe-reviewer", "source-map"],
+    "keywords": [
+        "twig",
+        "symfony",
+        "dev",
+        "fe-reviewer",
+        "source-map"
+    ],
     "require": {
         "php": ">=8.2",
         "twig/twig": "^3.10",
@@ -22,5 +28,25 @@
             "dev-main": "0.1-dev"
         }
     },
-    "minimum-stability": "stable"
+    "minimum-stability": "stable",
+    "scripts": {
+        "update:tools": "composer update -d tools/php-cs-fixer && composer update -d tools/phpstan",
+        "phpcs": "tools/php-cs-fixer/vendor/bin/php-cs-fixer fix -vvv --diff --dry-run --allow-risky=yes --ansi",
+        "phpcs:fix": "tools/php-cs-fixer/vendor/bin/php-cs-fixer fix -vvv --allow-risky=yes --ansi",
+        "phpstan": "tools/phpstan/vendor/bin/phpstan analyse -c phpstan.neon --ansi",
+        "test": [
+            "@phpcs",
+            "@phpstan",
+            "@phpunit"
+        ],
+        "phpunit": "vendor/bin/phpunit"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^11.5 || ^12.0"
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Artack\\FeReviewerTwig\\Tests\\": "tests/"
+        }
+    }
 }
