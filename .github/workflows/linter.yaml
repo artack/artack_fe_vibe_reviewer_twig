@@ -1,0 +1,95 @@
+name: linter
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+on:
+  push:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  checker:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: intl
+          ini-values: date.timezone=Europe/Zurich,memory_limit=-1,session.gc_probability=0,zend.assertions=1
+          coverage: none
+          tools: composer
+
+      - name: PHP version
+        run: php -v
+
+      - name: Composer License Audit
+        uses: artack/composer-license-audit@main
+        with:
+          allowed-licenses: |
+            - MIT
+            - BSD-2-Clause
+            - BSD-3-Clause
+            - Apache-2.0
+
+  linter:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: intl
+          ini-values: date.timezone=Europe/Zurich,memory_limit=-1,session.gc_probability=0,zend.assertions=1
+          coverage: none
+          tools: composer
+
+      - name: PHP version
+        run: php -v
+
+      - name: Get Composer Cache Directory
+        id: composer-cache
+        run: echo "dir=$(composer config cache-files-dir)" >> "$GITHUB_OUTPUT"
+
+      - name: Cache Composer Downloads
+        uses: actions/cache@v6
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: composer-${{ runner.os }}-${{ hashFiles('composer.lock', 'tools/*/composer.lock') }}
+          restore-keys: composer-${{ runner.os }}-
+
+      - name: Composer Validate
+        run: composer validate --no-check-publish --strict
+
+      - name: Composer Install Dependencies
+        run: composer install --prefer-dist --no-progress --no-scripts --no-interaction
+
+      - name: Composer Audit
+        run: composer audit
+
+      - name: Composer Tools PHPCS Install Dependencies
+        run: composer install --working-dir tools/php-cs-fixer --prefer-dist --no-progress --no-scripts --no-interaction
+
+      - name: PHPCS Run
+        run: composer phpcs
+
+      - name: Composer Tools PHPSTAN Install Dependencies
+        run: composer install --working-dir tools/phpstan --prefer-dist --no-progress --no-scripts --no-interaction
+
+      - name: PHPSTAN Run
+        run: composer phpstan
+
+      - name: PHPUnit Run
+        run: vendor/bin/phpunit
